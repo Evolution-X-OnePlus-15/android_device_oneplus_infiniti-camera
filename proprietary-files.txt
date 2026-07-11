@@ -59,6 +59,7 @@ my_product/lib64/libst_mobile.so:system_ext/lib64/libst_mobile.so;DISABLE_CHECKE
 my_product/lib64/libst_sticker_jni.so:system_ext/lib64/libst_sticker_jni.so;FIX_SONAME;DISABLE_CHECKELF
 
 odm/lib64/libOplusSecurity.so
+odm/lib64/liboplus_cfbt.so;DISABLE_CHECKELF
 odm/lib64/libalogencrypt.so
 odm/lib/libalogencrypt.so
 odm/lib64/libarcsoft_hdr_couple_api.so:odm/lib64/libarcsoft_hdr_couple_api_V2.so;DISABLE_CHECKELF
