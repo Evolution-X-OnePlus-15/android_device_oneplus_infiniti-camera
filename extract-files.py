@@ -5661,6 +5661,17 @@ lib_fixups: lib_fixups_user_type = {
         'libmpbase',
         'libextendfile',
     ): lib_fixup_system_ext_suffix,
+    # DT_NEEDED OEM libs that are not packaged as their own soong modules (they
+    # live in other vendor images we don't own). Drop them from the generated
+    # shared_libs so the prebuilt modules don't reference undefined modules.
+    # Without this, extract-files emits e.g. libskjpegencoderextimpl -> these,
+    # and `m nothing` fails with "depends on undefined module".
+    (
+        'libatlasservice',
+        'libimmlistservice',
+        'liboplus_imageprocessing',
+        'liboplusmmdebug',
+    ): lib_fixup_remove,
 }
 
 def blob_fixup_filemanager_cut_skip_k0_when_same_disk(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
