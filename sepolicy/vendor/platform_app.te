@@ -4,5 +4,8 @@ get_prop(platform_app, vendor_camera_prop)
 
 # Gallery AI editor initializes stock Qualcomm/Oplus DSP models through FastRPC.
 dontaudit platform_app adsprpcd_file:file read;
+dontaudit platform_app vendor_qdsp_device:chr_file open;
 allow platform_app vendor_qdsp_device:chr_file { ioctl open read };
 allow platform_app vendor_file:dir watch;
+
+allow platform_app same_process_hal_file:file { execute read open getattr map };

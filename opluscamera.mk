@@ -5,11 +5,16 @@ OPLUS_CAMERA_PATH := device/oneplus/infiniti-camera
 PRODUCT_PACKAGES += \
     aon.frameworkres.overlay.product \
     android.hardware.graphics.common-V3-ndk.vendor \
-    oplus-services \
+    CameraThemedIcon \
     Photos
 
 PRODUCT_SYSTEM_SERVER_JARS += \
     oplus-services
+    
+# OEM signature-permission definer (O3 Phase-B1): platform-signed, code-less app
+# that defines the oplus/oppo signature perms whose OOS definer
+# (oplus-framework-res.apk) is not shipped, so the ported OEM apps can hold them.
+$(call inherit-product, device/oneplus/infiniti-camera/definer/oplus-definer.mk)    
 
 # Deobfuscating libalogencrypt shim: a plaintext pass-through libalogencrypt.so
 # so the arcsoft APS logger (odm/lib64/libalog.so) dlopen+dlsym alog_encrypt
@@ -43,6 +48,16 @@ PRODUCT_COPY_FILES += \
     $(OPLUS_CAMERA_PATH)/configs/framework/androidx.camera.extensions.impl.jar:$(TARGET_COPY_OUT_SYSTEM_EXT)/framework/androidx.camera.extensions.impl.jar \
     $(OPLUS_CAMERA_PATH)/configs/sysconfig/hiddenapi-package-oplus-whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/hiddenapi-package-oplus-whitelist.xml
 
+# cryptoeng HAL service rc: device-tree-authored (see configs/init/) instead of
+# blob-fixup-patched out of the OEM odm extract, so it stays host_init_verifier-clean.
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/init/vendor.oplus.hardware.cryptoeng@1.0-service.rc:$(TARGET_COPY_OUT_ODM)/etc/init/vendor.oplus.hardware.cryptoeng@1.0-service.rc
+
+# AI Unit permissions
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/permissions/default-permissions-com.aiunit.aon.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-com.aiunit.aon.xml \
+    $(LOCAL_PATH)/configs/permissions/privapp-permissions-com.oplus.stdid.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-com.oplus.stdid.xml
+    
 # Gallery's ODNN retouch path dlopens QNN libraries by basename. Install the
 # OP15 QNN runtime in system_ext and place real copies in Gallery's native lib dir.
 PRODUCT_PACKAGES += \
@@ -132,6 +147,9 @@ $(call soong_config_set_bool,camera,override_format_from_reserved,true)
 
 # SEpolicy
 include device/oneplus/infiniti-camera/sepolicy/SEPolicy.mk
+
+# SafeBox / Private-Safe translation shim (locked-album -> native FBE Private Space)
+PRODUCT_PACKAGES += OplusEncryptionSafeBox
 
 # Inherit from camera-vendor.mk
 $(call inherit-product-if-exists, vendor/oneplus/infiniti-camera/infiniti-camera-vendor.mk)

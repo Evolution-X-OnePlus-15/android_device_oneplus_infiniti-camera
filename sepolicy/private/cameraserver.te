@@ -7,3 +7,16 @@ dontaudit cameraserver vendor_default_prop:file { getattr map open read };
 # also requires cameraserver to be trusted for this access.
 typeattribute cameraserver mlstrustedsubject;
 allow cameraserver opluscamera_app:process setsched;
+
+# cameraserver reads OEM vendor_default_prop during OplusCamera pipeline setup
+# (benign getprop fallback; was permissive=0 avc spam). cameraserver is a
+# coredomain, so an allow on vendor_default_prop:file trips the Treble property-
+# ownership neverallow (system/sepolicy/{public,private}/property.te). The read
+# is not functionally required (stock labels the prop with a typed context that
+# is absent on our build); silence the benign denial with dontaudit rather than
+# granting a coredomain access to a vendor property type.
+dontaudit cameraserver vendor_default_prop:file { read getattr map open };
+
+# The setsched target (opluscamera_app) carries app MCS categories, so the
+# process-setsched MLS rule also requires cameraserver to be trusted for it.
+typeattribute cameraserver mlstrustedsubject;

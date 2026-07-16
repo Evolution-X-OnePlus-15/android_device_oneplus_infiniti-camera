@@ -37,6 +37,7 @@
         <permission name="android.permission.UPDATE_APP_OPS_STATS"/>
         <permission name="android.permission.WRITE_APN_SETTINGS"/>
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="com.oplus.permission.safe.PICTURE"/>
     </privapp-permissions>
 
     <!-- OPLUS camera -->
@@ -51,8 +52,17 @@
         <permission name="android.permission.SUBSCRIBE_TO_KEYGUARD_LOCKED_STATE"/>
         <permission name="oplus.permission.OPLUS_COMPONENT_SAFE"/>
         <permission name="oppo.permission.OPPO_COMPONENT_SAFE"/>
+        <permission name="com.oplus.permission.safe.AI_APP"/>
+        <permission name="com.oplus.permission.safe.APP_MANAGER"/>
         <permission name="com.oplus.permission.safe.CAMERA"/>
-     </privapp-permissions>
+        <permission name="com.oplus.permission.safe.LOG"/>
+        <permission name="com.oplus.permission.safe.PHONE"/>
+        <permission name="com.oplus.permission.safe.POWER"/>
+        <permission name="com.oplus.permission.safe.PROTECT"/>
+        <permission name="com.oplus.permission.safe.READ_COMMON"/>
+        <permission name="com.oplus.permission.safe.SETTINGS"/>
+        <permission name="com.oplus.permission.safe.WINDOW"/>
+    </privapp-permissions>
 
     <!-- OPLUS gallery -->
     <privapp-permissions package="com.oneplus.gallery">
@@ -98,7 +108,12 @@
 
     <!-- OPLUS phone manager -->
     <privapp-permissions package="com.oplus.phonemanager">
+        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="android.permission.PACKAGE_USAGE_STATS"/>
+        <permission name="android.permission.USE_RESERVED_DISK"/>
+        <permission name="android.permission.SET_BIOMETRIC_DIALOG_ADVANCED"/>
+        <permission name="android.permission.FORCE_STOP_PACKAGES"/>
     </privapp-permissions>
 
     <!-- OPLUS private safe -->
@@ -108,6 +123,7 @@
 
     <!-- OPLUS exsystemservice -->
     <privapp-permissions package="com.oplus.exsystemservice">
+        <permission name="android.permission.FORCE_STOP_PACKAGES"/>
         <permission name="android.permission.INTERACT_ACROSS_USERS" />
         <permission name="android.permission.CONNECTIVITY_INTERNAL" />
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
@@ -116,10 +132,20 @@
         <permission name="android.permission.MODIFY_PHONE_STATE"/>
         <permission name="android.permission.MANAGE_USERS"/>
         <permission name="android.permission.INSTALL_PACKAGES"/>
+        <permission name="android.permission.SUBSCRIBE_TO_KEYGUARD_LOCKED_STATE"/>
     </privapp-permissions>
 
     <!-- OPLUS Live Alert -->
     <privapp-permissions package="com.oplus.ambient.livealert">
         <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+    </privapp-permissions>
+    
+    <!-- OPLUS AI Unit -->
+    <privapp-permissions package="com.oplus.aiunit">
+        <permission name="com.oplus.permission.ai.AI_PATH_READ_WRITE"/>
+        <permission name="com.oplus.permission.safe.APP_MANAGER"/>
+        <permission name="com.oplus.permission.safe.POWER"/>
+        <permission name="com.oplus.permission.safe.SETTINGS"/>
+        <permission name="com.oppo.permission.safe.AI_APP"/>
     </privapp-permissions>
 </permissions>

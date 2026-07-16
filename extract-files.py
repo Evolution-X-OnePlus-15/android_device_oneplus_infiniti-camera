@@ -6,6 +6,7 @@
 #
 
 from extract_utils.fixups_lib import (
+    lib_fixup_remove,
     lib_fixups,
     lib_fixups_user_type,
 )
@@ -25,6 +26,19 @@ import glob
 import re
 import shutil
 
+from apk_fixups_op15 import (
+    blob_fixup_apktool_unpack_full,
+    blob_fixup_cryptoeng_manifest,
+    blob_fixup_cryptoeng_permissions_xml,
+)
+from apk_fixups_camera_op15 import (
+    blob_fixup_aiunit_settings_category,
+    blob_fixup_aonservice_settings_category,
+    blob_fixup_opluscamera_component_safe_permission,
+)
+from apk_fixups_gallery_op15 import (
+    blob_fixup_oppogallery_wallpaper_attach_intent,
+)
 
 def lib_fixup_system_ext_suffix(lib: str, partition: str, *args, **kwargs):
     """
@@ -45,6 +59,14 @@ def lib_fixup_system_ext_suffix(lib: str, partition: str, *args, **kwargs):
 
     return f'{lib}_system_ext' if lib in system_ext_libs else None
 
+def _replace_smali_method(data: str, signature: str, body: str) -> str:
+    # Replace a smali method body by its signature, independent of the (R8-obfuscated,
+    # build-drifting) class path. The signature is the stable anchor.
+    return re.sub(
+        rf'(?ms)^\.method {re.escape(signature)}\n.*?^\.end method',
+        f'.method {signature}\n{body}.end method',
+        data,
+    )
 
 def _noop_smali_method(data: str, signature: str) -> str:
     return re.sub(
@@ -130,6 +152,19 @@ def blob_fixup_apktool_unpack_manifest(ctx, file, file_path, *args, tmp_dir=None
         '-s',
     ])
 
+def blob_fixup_opluscamera_unpack(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
+    if tmp_dir is None:
+        return
+    run_cmd([java_path, '-Xmx8g', '-jar', apktool_path, 'd', file_path, '-o', tmp_dir, '-f'])
+
+
+def blob_fixup_apk_unpack_nosmali(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
+    # Resource+manifest decode only (-s keeps the original classes.dex), so large
+    # apks (AIUnit) are byte-preserved apart from a manifest edit — no smali
+    # roundtrip. apktool_pack() reads apktool.yml and rebuilds with the kept dex.
+    if tmp_dir is None:
+        return
+    run_cmd([java_path, '-Xmx8g', '-jar', apktool_path, 'd', '-s', file_path, '-o', tmp_dir, '-f'])
 
 def blob_fixup_opluscamera_font(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
     # OEM camera font-NPE neutralizer. The TypeFaceUtil static
@@ -5838,6 +5873,25 @@ def blob_fixup_filemanager_skip_osense_scene_actions(ctx, file, file_path, *args
     if fixed == data:
         raise ValueError('FileManager PerformanceManager.f() method not found')
     smali.write_text(fixed, encoding='utf-8')
+    
+def blob_fixup_sdk_facebeauty(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
+    # Re-point the guarded ProductJni probe from /product/lib64 to /system_ext/lib64.
+    # On LineageOS the lib ships at system_ext (my_product->system_ext remap), so the
+    # /product probe fails -> unguarded fallback -> zero FaceBeautyParams -> SIGSEGV.
+    # Anchored on the globally unique lib-path string in OplusFaceBeautyPreview;
+    # immune to R8/obfuscated class-path drift — no line-context dependency.
+    if tmp_dir is None:
+        return
+    OLD = '/product/lib64/libApsFaceBeautyPreviewProductJni.so'
+    NEW = '/system_ext/lib64/libApsFaceBeautyPreviewProductJni.so'
+    for smali in glob.glob(str(Path(tmp_dir) / 'smali*/**/*.smali'), recursive=True):
+        try:
+            data = open(smali, encoding='utf-8', errors='ignore').read()
+        except OSError:
+            continue
+        if OLD in data:
+            open(smali, 'w', encoding='utf-8').write(data.replace(OLD, NEW))
+            return
 
 
 def blob_fixup_filemanager_safecheck_direct(ctx, file, file_path, *args, tmp_dir=None, **kwargs):
@@ -5912,8 +5966,14 @@ blob_fixups: blob_fixups_user_type = {
         .call(blob_fixup_camera_unit_facebeauty_probe_path)
         .apktool_pack()
         .stripzip(),
+    'system_ext/framework/com.oplus.camera.unit.sdk.adapter.jar': blob_fixup()
+        .call(blob_fixup_opluscamera_unpack)
+        .call(blob_fixup_sdk_facebeauty)
+        .apktool_pack()
+        .stripzip(),
     'system_ext/priv-app/OplusCamera/OplusCamera.apk': blob_fixup()
         .call(blob_fixup_apktool_unpack_full)
+        .call(blob_fixup_opluscamera_component_safe_permission)
         .call(blob_fixup_opluscamera_font)
         .call(blob_fixup_opluscamera_blur_seginit_guard)
         .call(blob_fixup_strip_oem_permissions)
@@ -5978,6 +6038,14 @@ blob_fixups: blob_fixups_user_type = {
         .call(blob_fixup_cryptoeng_init_rc),
     'odm/etc/vintf/manifest/manifest_oplus_cryptoeng.xml': blob_fixup()
         .call(blob_fixup_cryptoeng_manifest),
+    'odm/lib64/libAncHumanSegFigureFusion.so': blob_fixup()
+        .clear_symbol_version('AHardwareBuffer_acquire')
+        .clear_symbol_version('AHardwareBuffer_allocate')
+        .clear_symbol_version('AHardwareBuffer_describe')
+        .clear_symbol_version('AHardwareBuffer_lock')
+        .clear_symbol_version('AHardwareBuffer_lockPlanes')
+        .clear_symbol_version('AHardwareBuffer_release')
+        .clear_symbol_version('AHardwareBuffer_unlock'),    
     'system_ext/app/FileManager/FileManager.apk': blob_fixup()
         .call(blob_fixup_apktool_unpack_full)
         .call(blob_fixup_opluscamera_uses_library)
