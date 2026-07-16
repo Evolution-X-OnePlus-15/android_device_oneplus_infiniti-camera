@@ -119,6 +119,11 @@
         <permission name="android.permission.USE_RESERVED_DISK"/>
         <permission name="android.permission.SET_BIOMETRIC_DIALOG_ADVANCED"/>
         <permission name="android.permission.FORCE_STOP_PACKAGES"/>
+        <permission name="android.permission.REBOOT"/>
+        <permission name="android.permission.WATCH_APPOPS"/>
+		    <permission name="android.permission.CONTROL_INCALL_EXPERIENCE"/>
+		    <permission name="android.permission.START_FOREGROUND_SERVICES_FROM_BACKGROUND"/>
+		    <permission name="android.permission.MODIFY_AUDIO_ROUTING"/>
     </privapp-permissions>
 
     <!-- OPLUS private safe -->
