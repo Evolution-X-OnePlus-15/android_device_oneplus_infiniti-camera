@@ -2,7 +2,7 @@
 ## are from OnePlus 15 (OxygenOS 16 CPH2745_11_A.01)
 
 # Camera
-my_product/app/OplusCamera/OplusCamera.apk:system_ext/priv-app/OplusCamera/OplusCamera.apk;OVERRIDES=Camera2,GoogleCameraGo
+my_product/app/OplusCamera/OplusCamera.apk:system_ext/priv-app/OplusCamera/OplusCamera.apk;OVERRIDES=Aperture,Camera2,GoogleCameraGo
 my_stock/priv-app/OppoGallery2/OppoGallery2.apk:system_ext/priv-app/OppoGallery2/OppoGallery2.apk
 my_stock/app/FileManager/FileManager.apk:system_ext/app/FileManager/FileManager.apk
 my_stock/app/ambientalert/ambientalert.apk:system_ext/app/ambientalert/ambientalert.apk
