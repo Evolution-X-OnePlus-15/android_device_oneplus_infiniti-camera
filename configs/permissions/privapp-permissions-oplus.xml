@@ -106,6 +106,12 @@
         <permission name="android.permission.SCHEDULE_EXACT_ALARM"/>
     </privapp-permissions>
 
+    <!-- Oplus Safecenter -->
+    <privapp-permissions package="com.oplus.safecenter">
+        <permission name="oplus.permission.OPLUS_COMPONENT_SAFE"/>
+        <permission name="com.oplus.safe.action.APP_HIDE_LIST_ACTIVITY"/>
+    </privapp-permissions>
+    
     <!-- OPLUS standard ID service -->
     <privapp-permissions package="com.oplus.safecenter">
         <permission name="oplus.permission.OPLUS_COMPONENT_SAFE"/>
