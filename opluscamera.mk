@@ -36,17 +36,26 @@ endif
 #PRODUCT_PACKAGES += \
 #    init.oplus.camera.rc
 
+# Compatconfig
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/compatconfig/oplus-gallery-receiver-compat-config.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/compatconfig/oplus-gallery-receiver-compat-config.xml
+
+# Oplus Features
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/oplus-features/com.oplus.app-features.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/extension/com.oplus.app-features.xml \
+    $(LOCAL_PATH)/configs/oplus-features/com.oplus.android-features.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/com.oplus.android-features.xml \
+    $(LOCAL_PATH)/configs/oplus-features/oplus.feature.android.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/oplus.feature.android.xml
+    
 # Permissions
 PRODUCT_COPY_FILES += \
-    $(OPLUS_CAMERA_PATH)/configs/init/init.oplus.camera_rus.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.oplus.camera_rus.rc \
-    $(OPLUS_CAMERA_PATH)/configs/extension/com.oplus.app-features.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/extension/com.oplus.app-features.xml \
-    $(OPLUS_CAMERA_PATH)/configs/permissions/default-permissions-com.aiunit.aon.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-com.aiunit.aon.xml \
-    $(OPLUS_CAMERA_PATH)/configs/permissions/com.oplus.android-features.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/com.oplus.android-features.xml \
-    $(OPLUS_CAMERA_PATH)/configs/permissions/com.oplus.pantanal.ums.privapp_permissions.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/com.oplus.pantanal.ums.privapp_permissions.xml \
-    $(OPLUS_CAMERA_PATH)/configs/permissions/oplus_google_lens_config.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/oplus_google_lens_config.xml \
-    $(OPLUS_CAMERA_PATH)/configs/permissions/privapp-permissions-oplus.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-oplus.xml \
-    $(OPLUS_CAMERA_PATH)/configs/framework/androidx.camera.extensions.impl.jar:$(TARGET_COPY_OUT_SYSTEM_EXT)/framework/androidx.camera.extensions.impl.jar \
-    $(OPLUS_CAMERA_PATH)/configs/sysconfig/hiddenapi-package-oplus-whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/hiddenapi-package-oplus-whitelist.xml
+    $(LOCAL_PATH)/configs/init/init.oplus.camera_rus.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.oplus.camera_rus.rc \
+    $(LOCAL_PATH)/configs/permissions/default-permissions-com.oplus.safecenter.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-com.oplus.safecenter.xml \
+    $(LOCAL_PATH)/configs/permissions/default-permissions-oneplus-gallery.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/default-permissions/default-permissions-oneplus-gallery.xml \
+    $(LOCAL_PATH)/configs/permissions/com.oplus.pantanal.ums.privapp_permissions.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/com.oplus.pantanal.ums.privapp_permissions.xml \
+    $(LOCAL_PATH)/configs/permissions/oplus_google_lens_config.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/oplus_google_lens_config.xml \
+    $(LOCAL_PATH)/configs/permissions/privapp-permissions-oplus.xml:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/permissions/privapp-permissions-oplus.xml \
+    $(LOCAL_PATH)/configs/framework/androidx.camera.extensions.impl.jar:$(TARGET_COPY_OUT_SYSTEM_EXT)/framework/androidx.camera.extensions.impl.jar \
+    $(LOCAL_PATH)/configs/sysconfig/hiddenapi-package-oplus-whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/hiddenapi-package-oplus-whitelist.xml
 
 # cryptoeng HAL service rc: device-tree-authored (see configs/init/) instead of
 # blob-fixup-patched out of the OEM odm extract, so it stays host_init_verifier-clean.

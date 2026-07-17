@@ -15,4 +15,5 @@
 <extend_features>
     <app_feature name="feature_is_support_olive" args="boolean:true"/>
     <app_feature name="feature_is_support_olive_slide_play" args="boolean:true"/>
+    <app_feature name="com.oplus.ambient.livealert.setting_switch" args="boolean:true"/>
 </extend_features>
